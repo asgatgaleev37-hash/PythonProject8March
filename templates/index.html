@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Исправленная ссылка без лишних скобок и кавычек -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+    <style>
+        body {
+            background: #000;
+            color: #ffd700;
+            text-align: center;
+            font-family: serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Настройка размера: картинка будет занимать столько, сколько ты укажешь в app.py */
+        #magic-img {
+            width: {{ content.size }};
+            max-width: 95vw; /* Ограничение по ширине экрана телефона */
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #ffd700;
+            transition: opacity 0.8s ease;
+        }
+
+        #magic-text {
+            opacity: 0;
+            font-size: 1.8rem;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animate__animated animate__zoomIn">
+        <img id="magic-img" src="{{ url_for('static', filename=content.image) }}">
+        <h1 id="magic-text">{{ content.text }}</h1>
+    </div>
+
+    <script>
+        // Получаем все настройки из твоего списка WISHES в app.py
+        const displayTime = {{ content.duration }};
+        const animationType = "{{ content.animation }}";
+        // Превращаем Python True/False в понятный браузеру формат
+        const shouldHide = {{ 'true' if content.hide else 'false' }};
+
+        setTimeout(function() {
+            const img = document.getElementById('magic-img');
+            const text = document.getElementById('magic-text');
+
+            if (shouldHide) {
+                // Если в app.py стоит "hide": True — гифка исчезает
+                img.style.opacity = '0';
+                setTimeout(function() {
+                    img.style.display = 'none';
+                    showText(text);
+                }, 800);
+            } else {
+                // Если в app.py стоит "hide": False — гифка остается (застывает)
+                showText(text);
+            }
+
+            function showText(el) {
+                el.style.opacity = '1';
+                el.classList.add('animate__animated', animationType);
+            }
+
+        }, displayTime);
+    </script>
+</body>
+</html>
