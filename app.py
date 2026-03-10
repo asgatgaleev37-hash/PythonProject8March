@@ -127,5 +127,7 @@ def magic_page():
     return render_template('index.html', content=random_content)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)  # Запуск сервера для тестов на твоем ПК
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
